@@ -1,0 +1,9 @@
+body {
+  background: #0f1113 !important;
+}
+
+.header {
+  background: #181c1f;
+  border-bottom: 1px solid #313135;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.4);
+}

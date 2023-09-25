@@ -1,95 +1,63 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import React, { useState, useEffect } from "react";
+import { ThemeSwitcherProvider } from "react-css-theme-switcher";
+import { Sun, Moon } from "react-feather";
 
 export default function Home() {
+  // Keeps the state of the theme
+  const [themeState, setThemeState] = useState("light");
+
+  // light/dark themes related styles css files
+  const themes = {
+    dark: `dark-theme.css`,
+    light: `light-theme.css`,
+  };
+
+  /**
+   * Gets the theme state on iniaial load
+   * stored in localStorage or if not, set default theme as light theme
+   */
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentTheme = localStorage.getItem("theme") || "light"; // get the user theme state from localStorage
+      setThemeState(currentTheme);
+    }
+  }, []);
+
+  /**
+   * Toggles the theme and keep it in localStorage
+   */
+  const toggleTheme = () => {
+    if (themeState === "dark") {
+      localStorage.setItem("theme", "light");
+      setThemeState("light");
+    } else {
+      localStorage.setItem("theme", "dark");
+      setThemeState("dark");
+    }
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <ThemeSwitcherProvider themeMap={themes} defaultTheme={themeState}>
+      <div className="center">
+        {themeState === "light" && (
+          <Sun
+            size={20}
+            color="black"
+            style={{ cursor: "pointer" }}
+            onClick={toggleTheme}
+          />
+        )}
+
+        {themeState === "dark" && (
+          <Moon
+            size={20}
+            color="white"
+            style={{ cursor: "pointer" }}
+            onClick={toggleTheme}
+          />
+        )}
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </ThemeSwitcherProvider>
+  );
 }
